@@ -1,0 +1,103 @@
+@*
+    Add Property Photo
+
+    Allows a member to upload a photo for a listing they own.
+    The controller checks listing ownership before allowing
+    the photo to be added.
+*@
+
+@model CLSWeb.Models.Listing
+
+@{
+    // Set the title shown in the browser.
+    ViewData["Title"] = "Add Property Photo";
+}
+
+<div class="container mt-4">
+
+    @* Page heading *@
+    <h1>Add Property Photo</h1>
+
+    @* Show the CLS number so the member knows which listing is being updated. *@
+    <p class="text-muted">
+        CLS #@Model.CLSNumber
+    </p>
+
+    @* Show the property address for another quick check before uploading. *@
+    <h4>@Model.StreetAddress</h4>
+
+    <p>
+        @Model.City, @Model.State @Model.ZipCode
+    </p>
+
+    <hr />
+
+    @* Show any errors that occur when the photo is submitted. *@
+    <div asp-validation-summary="All"
+         class="text-danger">
+    </div>
+
+    @*
+        The form sends the photo to the AddPhoto action in ListingsController.
+        multipart/form-data is needed because the form is uploading a file.
+    *@
+    <form asp-controller="Listings"
+          asp-action="AddPhoto"
+          asp-route-id="@Model.ListingID"
+          method="post"
+          enctype="multipart/form-data">
+
+        @* Let the member choose a property photo from their computer. *@
+        <div class="mb-3">
+
+            <label for="photoFile"
+                   class="form-label">
+                Property Photo
+            </label>
+
+            <input type="file"
+                   id="photoFile"
+                   name="photoFile"
+                   class="form-control"
+                   accept=".jpg,.jpeg,.png,.webp"
+                   required />
+
+            <div class="form-text">
+                Allowed formats: JPG, JPEG, PNG, and WEBP.
+            </div>
+
+        </div>
+
+        @* The caption is optional but can be used to describe the photo. *@
+        <div class="mb-3">
+
+            <label for="caption"
+                   class="form-label">
+                Caption
+            </label>
+
+            <input type="text"
+                   id="caption"
+                   name="caption"
+                   class="form-control"
+                   placeholder="Example: Front exterior" />
+
+        </div>
+
+        @* Submit the photo to the listing. *@
+        <button type="submit"
+                class="btn btn-primary">
+            Upload Photo
+        </button>
+
+        @* Return to the listing without uploading a photo. *@
+        <a asp-controller="Listings"
+           asp-action="Details"
+           asp-route-id="@Model.ListingID"
+           class="btn btn-outline-secondary">
+            Cancel
+        </a>
+
+    </form>
+
+</div>

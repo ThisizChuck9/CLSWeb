@@ -1,0 +1,176 @@
+@*
+    Delete Listing
+
+    This page allows a logged-in CLS member to confirm the deletion
+    of one of their listings. Ownership is checked when the page is
+    opened and checked again before the listing is deleted.
+*@
+
+@model CLSWeb.Models.Listing
+
+@{
+    // Set the title shown in the browser.
+    ViewData["Title"] = "Delete Listing";
+}
+
+<div class="container mt-4">
+
+    @* Make sure the member understands that the deletion is permanent. *@
+    <div class="mb-4">
+
+        <h1>Delete Listing</h1>
+
+        <p class="text-danger">
+            <strong>
+                Warning: This action cannot be undone.
+            </strong>
+        </p>
+
+        <p class="text-muted">
+            Review the property information below before
+            permanently deleting this listing.
+        </p>
+
+    </div>
+
+    @* Show the listing details so the member can verify the correct property. *@
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-danger text-white">
+            <strong>Listing to Be Deleted</strong>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>CLS Number</strong>
+
+                    <div>
+                        @Model.CLSNumber
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Listing Agent</strong>
+
+                    <div>
+                        @if (Model.Member != null)
+                        {
+                            @($"{Model.Member.FirstName} {Model.Member.LastName}")
+                        }
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Property Status</strong>
+
+                    <div>
+                        @Model.PropertyStatus
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Property Type</strong>
+
+                    <div>
+                        @Model.PropertyType
+                    </div>
+
+                </div>
+
+                <div class="col-12 mb-3">
+
+                    <strong>Property Address</strong>
+
+                    <div>
+                        @Model.StreetAddress
+                    </div>
+
+                    <div>
+                        @Model.City, @Model.State @Model.ZipCode
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>List Price</strong>
+
+                    <div>
+                        @Model.ListPrice.ToString("C")
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Date Listed</strong>
+
+                    <div>
+                        @Model.DateListed.ToString("MM/dd/yyyy")
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    @* Give the member one final warning before the listing is removed. *@
+    <div class="alert alert-danger"
+         role="alert">
+
+        <h5 class="alert-heading">
+            Are you sure you want to delete this listing?
+        </h5>
+
+        <p class="mb-0">
+            The listing and its associated photo records
+            will be permanently removed from CLS.
+        </p>
+
+    </div>
+
+    @*
+        Send the ListingID to DeleteConfirmed in ListingsController.
+        The controller checks ownership again before deleting anything
+        from the database.
+    *@
+    <form asp-controller="Listings"
+          asp-action="DeleteConfirmed"
+          asp-route-id="@Model.ListingID"
+          method="post">
+
+        @* Protect the delete request from cross-site request forgery. *@
+        @Html.AntiForgeryToken()
+
+        @* Delete the listing or return to My Listings without making changes. *@
+        <div class="d-flex gap-2 mb-5">
+
+            <button type="submit"
+                    class="btn btn-danger">
+                Delete Listing
+            </button>
+
+            <a asp-controller="Listings"
+               asp-action="MyListings"
+               class="btn btn-outline-secondary">
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>

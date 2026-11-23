@@ -1,0 +1,32 @@
+@model CLSWeb.ViewModels.LoginViewModel
+
+<h2>CLS Member Login</h2>
+
+@if (ViewBag.Message != null)
+{
+    <p style="color:red">
+        @ViewBag.Message
+    </p>
+}
+
+<form asp-action="Login" method="post">
+
+    <div>
+        <label>Member Number</label>
+        <input asp-for="MemberNumber" />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Password</label>
+        <input asp-for="Password" type="password" />
+    </div>
+
+    <br />
+
+    <button type="submit">
+        Login
+    </button>
+
+</form>

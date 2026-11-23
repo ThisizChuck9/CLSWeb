@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - CLSWeb
+    </title>
+
+    <script type="importmap"></script>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/CLSWeb.styles.css"
+          asp-append-version="true" />
+</head>
+
+<body>
+
+    @*
+        ---------------------------------------------------------
+        MAIN NAVIGATION
+        ---------------------------------------------------------
+
+        The navigation bar appears throughout CLS.
+
+        Both the CLSWeb brand and Home link return the
+        logged-in member to the CLS Dashboard.
+        ---------------------------------------------------------
+    *@
+    <header>
+
+        <nav class="navbar navbar-expand-sm
+                    navbar-toggleable-sm navbar-light
+                    bg-white border-bottom box-shadow mb-3">
+
+            <div class="container-fluid">
+
+
+                @*
+                    CLSWeb BRAND
+
+                    Clicking CLSWeb returns the member to:
+
+                    HomeController
+                        -> Dashboard()
+                *@
+                <a class="navbar-brand"
+                   asp-area=""
+                   asp-controller="Home"
+                   asp-action="Dashboard">
+
+                    CLSWeb
+
+                </a>
+
+
+                @*
+                    MOBILE NAVIGATION BUTTON
+
+                    Bootstrap displays this button when the
+                    browser window becomes too narrow to show
+                    the complete navigation menu.
+                *@
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+
+                <div class="navbar-collapse collapse
+                            d-sm-inline-flex justify-content-between">
+
+                    <ul class="navbar-nav flex-grow-1">
+
+
+                        @*
+                            HOME
+
+                            Previously this link pointed to:
+
+                            HomeController -> Index()
+
+                            which displayed the default ASP.NET
+                            Welcome page.
+
+                            It now points directly to the
+                            CLS Dashboard.
+                        *@
+                        <li class="nav-item">
+
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="Dashboard">
+
+                                Home
+
+                            </a>
+
+                        </li>
+
+
+                        @*
+                            PRIVACY PAGE
+                        *@
+                        <li class="nav-item">
+
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="Privacy">
+
+                                Privacy
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+    @*
+        ---------------------------------------------------------
+        PAGE CONTENT
+        ---------------------------------------------------------
+
+        Razor inserts the current view into RenderBody().
+        ---------------------------------------------------------
+    *@
+    <div class="container">
+
+        <main role="main"
+              class="pb-3">
+
+            @RenderBody()
+
+        </main>
+
+    </div>
+
+
+    @*
+        ---------------------------------------------------------
+        FOOTER
+        ---------------------------------------------------------
+    *@
+    <footer class="border-top footer text-muted">
+
+        <div class="container">
+
+            &copy; 2026 - CLSWeb -
+
+            <a asp-area=""
+               asp-controller="Home"
+               asp-action="Privacy">
+
+                Privacy
+
+            </a>
+
+        </div>
+
+    </footer>
+
+
+    @*
+        ---------------------------------------------------------
+        JAVASCRIPT
+        ---------------------------------------------------------
+    *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true">
+    </script>
+
+
+    @*
+        Allows individual Razor views to load additional
+        scripts when necessary.
+
+        For example, Create.cshtml and Edit.cshtml can load
+        ASP.NET validation scripts.
+    *@
+    @await RenderSectionAsync(
+        "Scripts",
+        required: false)
+
+</body>
+
+</html>

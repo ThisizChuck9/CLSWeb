@@ -1,0 +1,197 @@
+@*
+    My Listings
+
+    Displays only the property listings that belong to the currently
+    logged-in CLS member. ListingsController filters the listings
+    using the MemberID stored in the member's session.
+
+    From this page, the member can create a new listing or manage
+    listings they already own.
+*@
+
+@model IEnumerable<CLSWeb.Models.Listing>
+
+@{
+    // Set the title shown in the browser.
+    ViewData["Title"] = "My Listings";
+}
+
+<div class="container mt-4">
+
+    @* Introduce the page and provide the main navigation options. *@
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1>My Listings</h1>
+
+            <p class="text-muted">
+                Properties associated with your CLS member account
+            </p>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a asp-controller="Listings"
+               asp-action="Create"
+               class="btn btn-primary">
+                Add New Listing
+            </a>
+
+            <a asp-controller="Home"
+               asp-action="Dashboard"
+               class="btn btn-outline-secondary">
+                Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+    @* Let the member know when there are no listings associated with their account. *@
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You do not currently have any property listings.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @* Create a property card for each listing owned by the member. *@
+            @foreach (var listing in Model)
+            {
+                @* Use the first associated photo as the image for the property card. *@
+                var primaryPhoto = listing.Photos.FirstOrDefault();
+
+                <div class="col-md-6 col-lg-4 mb-4">
+
+                    <div class="card h-100 shadow-sm">
+
+                        @* Display the property photo when one is available. *@
+                        @if (primaryPhoto != null &&
+                             !string.IsNullOrWhiteSpace(primaryPhoto.PhotoURL))
+                        {
+                            <img src="@primaryPhoto.PhotoURL"
+                                 class="card-img-top"
+                                 alt="Listing photo"
+                                 style="height: 220px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            @* Use a placeholder until a photo has been added. *@
+                            <div class="bg-light d-flex align-items-center justify-content-center"
+                                 style="height: 220px;">
+
+                                <span class="text-muted">
+                                    No photo available
+                                </span>
+
+                            </div>
+                        }
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @listing.StreetAddress
+                            </h5>
+
+                            <p class="card-text mb-1">
+                                @listing.City, @listing.State @listing.ZipCode
+                            </p>
+
+                            @* Format the list price as currency without decimal places. *@
+                            <p class="card-text">
+
+                                <strong>
+                                    @listing.ListPrice.ToString("C0")
+                                </strong>
+
+                            </p>
+
+                            <p class="card-text">
+
+                                @listing.Bedrooms bedrooms |
+                                @listing.Bathrooms bathrooms
+
+                                @* Square footage is optional, so only show it when a value exists. *@
+                                @if (listing.SquareFeet.HasValue)
+                                {
+                                    <span>
+                                        |
+                                        @listing.SquareFeet.Value.ToString("N0")
+                                        sq. ft.
+                                    </span>
+                                }
+
+                            </p>
+
+                            <p class="card-text">
+
+                                <span class="badge bg-primary">
+                                    @listing.PropertyStatus
+                                </span>
+
+                                <span class="badge bg-secondary">
+                                    @listing.PropertyType
+                                </span>
+
+                            </p>
+
+                            <p class="card-text small text-muted">
+                                CLS #@listing.CLSNumber
+                            </p>
+
+                        </div>
+
+                        @*
+                            These actions apply to the member's own listings.
+                            ListingsController performs additional ownership checks
+                            before allowing a listing to be edited or deleted.
+                        *@
+                        <div class="card-footer bg-white">
+
+                            <div class="d-flex flex-wrap gap-2">
+
+                                <a asp-controller="Listings"
+                                   asp-action="Details"
+                                   asp-route-id="@listing.ListingID"
+                                   asp-route-returnTo="MyListings"
+                                   class="btn btn-primary flex-fill">
+                                   View Listing
+                                </a>
+
+
+                                <a asp-controller="Listings"
+                                   asp-action="Edit"
+                                   asp-route-id="@listing.ListingID"
+                                   class="btn btn-outline-primary flex-fill">
+                                    Edit Listing
+                                </a>
+
+                                @*
+                                    Delete opens the confirmation page first.
+                                    The listing is not removed until the member confirms the deletion.
+                                *@
+                                <a asp-controller="Listings"
+                                   asp-action="Delete"
+                                   asp-route-id="@listing.ListingID"
+                                   class="btn btn-outline-danger flex-fill">
+                                    Delete Listing
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

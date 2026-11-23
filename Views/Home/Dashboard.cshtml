@@ -1,0 +1,257 @@
+@{
+    // PAGE TITLE
+    // Sets the browser/page title for the CLS Dashboard.
+    ViewData["Title"] = "CLS Dashboard";
+}
+
+
+<div class="container mt-5">
+
+
+    @*
+        ---------------------------------------------------------
+        DASHBOARD HEADER
+        ---------------------------------------------------------
+
+        Displays:
+
+        - Chicago Listing Service title
+        - Logged-in member's name
+        - Logout button
+    *@
+    <div class="d-flex justify-content-between align-items-start mb-4">
+
+        <div>
+
+            <h1>
+                Chicago Listing Service
+            </h1>
+
+
+            @*
+                MemberName was stored in the ASP.NET Core
+                session when the member logged into CLS.
+
+                HomeController passes the member name to
+                this page through ViewBag.MemberName.
+            *@
+            <h4 class="text-muted">
+
+                Welcome, @ViewBag.MemberName
+
+            </h4>
+
+        </div>
+
+
+        @*
+            ---------------------------------------------------------
+            LOGOUT BUTTON
+            ---------------------------------------------------------
+
+            Sends the member to:
+
+            AccountController
+                -> Logout()
+
+            Logout clears the ASP.NET Core session and
+            returns the member to the Login page.
+        *@
+        <a asp-controller="Account"
+           asp-action="Logout"
+           class="btn btn-outline-danger">
+
+            Logout
+
+        </a>
+
+    </div>
+
+
+    <hr />
+
+
+    @*
+        ---------------------------------------------------------
+        DASHBOARD CARDS
+        ---------------------------------------------------------
+
+        Search Listings has been removed from the final CLS
+        project because I ran out of time to implement
+
+        The dashboard contains only completed functionality:
+
+        1. Property Listings
+        2. My Listings
+        ---------------------------------------------------------
+    *@
+    <div class="row mt-4">
+
+
+        @*
+            ---------------------------------------------------------
+            PROPERTY LISTINGS CARD
+            ---------------------------------------------------------
+
+            Allows the member to browse all property listings
+            currently available in CLS.
+
+            col-md-6 means:
+
+            On medium and larger screens, this card uses
+            half of the Bootstrap row.
+        *@
+        <div class="col-md-6 mb-3">
+
+            @*
+                h-100 makes both dashboard cards the same height.
+            *@
+            <div class="card shadow-sm h-100">
+
+
+                @*
+                    d-flex flex-column changes the card body into
+                    a vertical Flexbox container.
+
+                    This allows mt-auto below to push the button
+                    to the bottom of the card.
+                *@
+                <div class="card-body d-flex flex-column">
+
+
+                    <h4 class="card-title">
+
+                        Property Listings
+
+                    </h4>
+
+
+                    <p class="card-text">
+
+                        Browse properties currently available in CLS.
+
+                    </p>
+
+
+                    @*
+                        ---------------------------------------------------------
+                        PROPERTY LISTINGS BUTTON AREA
+                        ---------------------------------------------------------
+
+                        mt-auto uses Bootstrap's automatic top margin.
+
+                        Any unused vertical space is placed above
+                        the button.
+
+                    *@
+                    <div class="mt-auto">
+
+                        @*
+                            Opens:
+
+                            ListingsController
+                                -> Index()
+
+                            This page displays all CLS listings.
+                        *@
+                        <a asp-controller="Listings"
+                           asp-action="Index"
+                           class="btn btn-primary">
+
+                            View Listings
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        @*
+            ---------------------------------------------------------
+            MY LISTINGS CARD
+            ---------------------------------------------------------
+
+            Gives the logged-in member access only to listings
+            associated with that member's account.
+
+            ListingsController.MyListings() uses MemberID from
+            the ASP.NET Core session to filter the Listings table.
+        *@
+        <div class="col-md-6 mb-3">
+
+            @*
+                h-100 keeps this card the same height as the
+                Property Listings card.
+            *@
+            <div class="card shadow-sm h-100">
+
+
+                @*
+                    d-flex flex-column allows the button area
+                    to be pushed to the bottom of the card.
+                *@
+                <div class="card-body d-flex flex-column">
+
+
+                    <h4 class="card-title">
+
+                        My Listings
+
+                    </h4>
+
+
+                    <p class="card-text">
+
+                        View properties associated with your member account.
+
+                    </p>
+
+
+                    @*
+                        ---------------------------------------------------------
+                        MY LISTINGS BUTTON AREA
+                        ---------------------------------------------------------
+
+                        mt-auto pushes this button to the bottom
+                        of the card.
+
+                        This keeps both dashboard buttons aligned
+                        even when the descriptions contain a
+                        different number of lines.
+                    *@
+                    <div class="mt-auto">
+
+                        @*
+                            Opens:
+
+                            ListingsController
+                                -> MyListings()
+
+                            Typical URL:
+
+                            /Listings/MyListings
+                        *@
+                        <a asp-controller="Listings"
+                           asp-action="MyListings"
+                           class="btn btn-primary">
+
+                            View My Listings
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

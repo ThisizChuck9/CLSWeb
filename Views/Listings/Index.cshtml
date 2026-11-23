@@ -1,0 +1,181 @@
+@*
+    Property Listings
+
+    Displays all property listings currently stored in CLS.
+    Each listing includes its associated member and property photos.
+
+    Members can browse and view every listing, but listing management
+    remains limited to the member who owns the property.
+*@
+
+@model IEnumerable<CLSWeb.Models.Listing>
+
+@{
+    // Set the title shown in the browser.
+    ViewData["Title"] = "Property Listings";
+}
+
+<div class="container mt-4">
+
+    @* Introduce the page and provide a way back to the dashboard. *@
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1>Property Listings</h1>
+
+            <p class="text-muted">
+                Browse all properties currently listed in CLS.
+            </p>
+
+        </div>
+
+        <a asp-controller="Home"
+           asp-action="Dashboard"
+           class="btn btn-outline-secondary">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+    @* Show a message when CLS does not contain any property listings. *@
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            There are no property listings available.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @*
+                Create a property card for every listing returned
+                by ListingsController.Index().
+            *@
+            @foreach (var listing in Model)
+            {
+                @* Use the first associated photo as the image on the property card. *@
+                var primaryPhoto = listing.Photos
+                    .OrderBy(p => p.UploadDate)
+                    .FirstOrDefault();
+
+                <div class="col-md-6 col-lg-4 mb-4">
+
+                    <div class="card h-100 shadow-sm">
+
+                        @* Display the property photo when one is available. *@
+                        @if (primaryPhoto != null &&
+                             !string.IsNullOrWhiteSpace(primaryPhoto.PhotoURL))
+                        {
+                            <img src="@primaryPhoto.PhotoURL"
+                                 class="card-img-top"
+                                 alt="@(string.IsNullOrWhiteSpace(primaryPhoto.Caption)
+                                     ? "Property photo"
+                                     : primaryPhoto.Caption)"
+                                 style="height: 220px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            @* Use a placeholder until a property photo has been added. *@
+                            <div class="bg-light d-flex align-items-center justify-content-center"
+                                 style="height: 220px;">
+
+                                <span class="text-muted">
+                                    No photo available
+                                </span>
+
+                            </div>
+                        }
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @listing.StreetAddress
+                            </h5>
+
+                            <p class="card-text mb-1">
+                                @listing.City, @listing.State @listing.ZipCode
+                            </p>
+
+                            @* Format the list price as currency without decimal places. *@
+                            <p class="card-text">
+
+                                <strong>
+                                    @listing.ListPrice.ToString("C0")
+                                </strong>
+
+                            </p>
+
+                            <p class="card-text">
+
+                                @listing.Bedrooms bedrooms |
+                                @listing.Bathrooms bathrooms
+
+                                @* Square footage is optional, so only show it when available. *@
+                                @if (listing.SquareFeet.HasValue)
+                                {
+                                    <span>
+                                        |
+                                        @listing.SquareFeet.Value.ToString("N0")
+                                        sq. ft.
+                                    </span>
+                                }
+
+                            </p>
+
+                            <p class="card-text">
+
+                                <span class="badge bg-primary">
+                                    @listing.PropertyStatus
+                                </span>
+
+                                <span class="badge bg-secondary">
+                                    @listing.PropertyType
+                                </span>
+
+                            </p>
+
+                            <p class="card-text small text-muted mb-1">
+                                CLS #@listing.CLSNumber
+                            </p>
+
+                            @*
+                                The Member record is loaded with each listing.
+                                Show the listing member when that information is available.
+                            *@
+                            @if (listing.Member != null)
+                            {
+                                <p class="card-text small text-muted">
+                                    Listed by
+                                    @listing.Member.FirstName
+                                    @listing.Member.LastName
+                                </p>
+                            }
+
+                        </div>
+
+                        <div class="card-footer bg-white">
+
+                            @*
+                                Pass the ListingID to the Details action so the
+                                member can view the complete property listing.
+                            *@
+                            <a asp-controller="Listings"
+                               asp-action="Details"
+                               asp-route-id="@listing.ListingID"
+                               class="btn btn-primary w-100">
+                                View Listing
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
